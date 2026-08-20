@@ -1,12 +1,32 @@
-/**
- * Host half of dock-markdown: deliberately minimal. File reading is
- * delegated to dock-editor's /desk-editor/fs.read route (the markdown view
- * fetches through it, same-origin), so no route handlers are registered
- * here. inject stays identical to dock-editor so this plugin mounts in the
- * same activation order and never applies before the web runtime is ready.
- */
+import type { IncomingMessage, ServerResponse } from 'node:http';
 export declare const name = "dock-markdown";
-/** Services required before mounting (same as dock-editor; no routes used). */
+/** Services required before mounting. */
 export declare const inject: string[];
-/** No-op host body: all behavior lives in the client half. */
-export declare function apply(): void;
+type WbErrorCode = 'bad-request' | 'forbidden' | 'fs-error' | 'not-found' | 'internal' | 'too-large';
+export declare class WbError extends Error {
+    readonly code: WbErrorCode;
+    readonly status: number;
+    constructor(code: WbErrorCode, message: string, status?: number);
+}
+interface WbContext {
+    webServer: {
+        register(options: {
+            kind: 'prefix';
+            path: string;
+            handler: (req: IncomingMessage, res: ServerResponse) => void | Promise<void>;
+        }): () => void;
+    };
+    sessions: {
+        get(sessionId: string): {
+            header: {
+                cwd?: string;
+            };
+        } | undefined;
+    };
+    webRuntime: {
+        trustedHosts: readonly string[];
+    };
+    effect(fn: () => void | (() => void), label?: string): void;
+}
+export declare function apply(ctx: WbContext): void;
+export {};
