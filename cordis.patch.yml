@@ -1,0 +1,6 @@
+# dock-markdown bundle patch: mounts the markdown file-viewer plugin row
+# (client half registers the 'markdown' file viewer against dock-files and
+# the matching editor-area view against dock).
+- insert:
+    - id: dock-markdown
+      name: 'dock-markdown'
