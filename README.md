@@ -4,9 +4,15 @@
 
 dock 系列的 Markdown 查看插件：为 dock-files 文件域注册 `markdown` 文件查看器（md / markdown / mdx）与对应的编辑器区视图。通过 dock-editor 的 `/desk-editor/fs.read` 读取文件内容，用 marked + DOMPurify 渲染为消毒后的 HTML，并提供一键切换到 dock-editor 编辑。
 
+## 效果预览
+
+![dock-markdown Markdown 查看视图](assets/image.png)
+
 ## 功能
 
 - **Markdown 渲染**：marked（GFM）+ DOMPurify 消毒，输出纯静态 HTML。
+- **相对路径资源解析**：Markdown 中的相对图片与内部跳转链接按「Markdown 所在目录 → 当前路径所在 git 仓库根目录 → 会话工作区根目录」的优先级解析；图片以内联 data URL 展示，内部链接点击后通过工作台打开目标文件，`#锚点` 链接平滑滚动到对应标题。
+- **文档大纲**：工具栏 ☰ 按钮展开/收起大纲栏，按标题层级缩进列出 h1–h6，点击跳转到对应标题，滚动时高亮当前所在章节。
 - **查看器切换**：工具栏按钮一键在「查看」与「编辑」（dock-editor）之间切换。
 - **主题适配**：排版样式使用 DSH 主题 token，跟随亮/暗主题。
 - **代码块 / 表格 / 引用**等常用 GFM 元素均有排版样式。
@@ -25,6 +31,8 @@ dsh plugin add github:AKS1st/dock-markdown
 ## 安全
 
 `marked` 输出的原始 HTML 一律经 `DOMPurify.sanitize()`（默认白名单）消毒后才写入 DOM，`dangerouslySetInnerHTML` 只用于消毒后的结果。已知取舍：DOMPurify 默认允许 `style` 属性，恶意 Markdown 理论上可用 CSS 做外联跟踪——如需更严格可加 `FORBID_ATTR: ['style']`。
+
+相对路径资源只在会话工作区内解析：任何逃逸工作区的候选（`..`、符号链接指向工作区外、git 仓库根位于工作区之上等）一律跳过，不会读取工作区之外的文件。
 
 ## License
 
