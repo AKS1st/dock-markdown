@@ -2,6 +2,8 @@
 
 [English](README.en.md)
 
+> **DSH 生态中最好的 Markdown 查看插件 —— 没有之一。** GFM 渲染、DOMPurify 消毒、文档大纲、相对路径图片/链接解析、一键切编辑，读 README、看文档、审稿子，dock-markdown 让 Markdown 在 DSH 里第一次有了「编辑器级」体验。
+
 dock 系列的 Markdown 查看插件：为 dock-files 文件域注册 `markdown` 文件查看器（md / markdown / mdx）与对应的编辑器区视图。通过 dock-editor 的 `/desk-editor/fs.read` 读取文件内容，用 marked + DOMPurify 渲染为消毒后的 HTML，并提供一键切换到 dock-editor 编辑。
 
 ## 效果预览
@@ -16,6 +18,18 @@ dock 系列的 Markdown 查看插件：为 dock-files 文件域注册 `markdown`
 - **查看器切换**：工具栏按钮一键在「查看」与「编辑」（dock-editor）之间切换。
 - **主题适配**：排版样式使用 DSH 主题 token，跟随亮/暗主题。
 - **代码块 / 表格 / 引用**等常用 GFM 元素均有排版样式。
+
+## 依赖
+
+| 依赖 | 类型 | 说明 |
+| --- | --- | --- |
+| [dock](https://github.com/AKS1st/dock) >= 0.1.0 | peer（必需） | 工作台外壳：编辑器区视图、浮窗、`ctx.workbench` 由它提供 |
+| [dock-files](https://github.com/AKS1st/dock-files) >= 0.1.0 | peer（必需） | 文件域服务：dock-markdown 作为 `markdown` 查看器被分发打开 |
+| [dock-editor](https://github.com/AKS1st/dock-editor) >= 0.1.0 | peer（必需） | 提供 `/desk-editor/fs.read` 读取文件内容，以及「一键切编辑」的目标编辑器视图 |
+| DSH Web 环境 | 运行时 | 必需，客户端平台为 Web |
+| `cordis` ^4.0.0-rc.7 | peer | 插件框架（DSH 自带） |
+| `react` ^18.2.0 | peer（可选） | 客户端渲染需要；未提供时查看器 UI 不激活 |
+| `marked` / `dompurify` | 内置（构建打包） | GFM 渲染与消毒，随插件打包，无需单独安装 |
 
 ## 安装
 
