@@ -17,7 +17,12 @@ export const inject = ['workbench', 'files']
 
 /** Local structural face of ctx.files (avoid type dependency on dock-files). */
 interface FilesService {
-  registerFileViewer(def: { id: string; exts?: string[]; default?: boolean }): () => void
+  registerFileViewer(def: {
+    id: string
+    exts?: string[]
+    default?: boolean
+    icon?: { color?: string; path?: string; viewBox?: string }
+  }): () => void
 }
 
 /** Client plugin body. */
@@ -29,8 +34,14 @@ export function apply(ctx: WorkbenchContext): void {
   if (workbench === undefined || files === undefined) return
 
   // Register the markdown viewer for .md / .markdown / .mdx files (the
-  // catch-all default stays dock-editor's 'editor' viewer).
-  ctx.effect(() => files.registerFileViewer({ id: 'markdown', exts: ['md', 'markdown', 'mdx'] }), 'dock-markdown: file viewer')
+  // catch-all default stays dock-editor's 'editor' viewer), with the
+  // explorer icon for those types (tint only; icon.path can carry a custom
+  // markdown glyph later).
+  ctx.effect(() => files.registerFileViewer({
+    id: 'markdown',
+    exts: ['md', 'markdown', 'mdx'],
+    icon: { color: '#4aa3df' },
+  }), 'dock-markdown: file viewer')
 
   // The view that receives open seeds ({ path, title }). Like dock-editor it
   // stays registered as an editor-area view; floating windows resolve their
