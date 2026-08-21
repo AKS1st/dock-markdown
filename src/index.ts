@@ -11,11 +11,11 @@
  *      a work tree)
  *   3. relative to the session workspace root (the conversation cwd)
  *
- * Every candidate must resolve inside the session workspace (canonical
- * containment, same as dock-editor / dock-images): a candidate that escapes
- * the workspace — via `..`, a symlink, or because the repo root sits above
- * the workspace — is skipped, never served. A URL-encoded spelling of the
- * ref (`%20` etc.) is tried as a secondary spelling per candidate.
+ * Candidates are NOT confined to the session workspace: the conversation
+ * context can open Markdown files anywhere on the host (e.g.
+ * ~/.dsh/skills/...), so their relative assets are resolved and served
+ * wherever the file lives. A URL-encoded spelling of the ref (`%20` etc.)
+ * is tried as a secondary spelling per candidate.
  *
  * - kind "image" reads the matched file as base64 + mime (20 MiB cap) so
  *   the client can inline it as a data URL;
@@ -26,8 +26,8 @@
  * dock-editor / dock-images (each plugin keeps its own copies).
  */
 import { execFile } from 'node:child_process'
-import { readFile, realpath, stat } from 'node:fs/promises'
-import { basename, dirname, isAbsolute, join, relative, resolve, sep } from 'node:path'
+import { readFile, stat } from 'node:fs/promises'
+import { dirname, resolve } from 'node:path'
 import type { IncomingHttpHeaders, IncomingMessage, ServerResponse } from 'node:http'
 
 export const name = 'dock-markdown'
@@ -100,29 +100,14 @@ function requireAbsolute(path: string): string {
 }
 
 /**
- * Confine a caller-supplied absolute path to the session workspace: the
- * canonical (symlink-resolved) path must equal the canonical session cwd or
- * live under it (separator boundary). Any escape — `..`, a symlink pointing
- * out of the workspace, or an unrelated absolute path — is rejected 403.
- * For a not-yet-existing target, the parent directory is canonicalized and
- * the basename re-appended before the containment check. Returns the
- * canonical target path.
+ * Resolve a caller-supplied absolute path for READING: no workspace
+ * containment — Markdown files can live anywhere on the host (the
+ * conversation context may mention paths outside the session workspace),
+ * and their relative assets must be servable wherever the file lives.
  */
-async function resolveWorkspacePath(cwd: string, raw: string): Promise<string> {
-  const root = await realpath(cwd).catch(() => resolve(cwd))
+function resolveReadPath(raw: string): string {
   requireAbsolute(raw)
-  let target: string
-  try {
-    target = await realpath(raw)
-  } catch {
-    const parent = await realpath(dirname(raw)).catch(() => dirname(raw))
-    target = join(parent, basename(raw))
-  }
-  const rel = relative(root, target)
-  if (rel === '' || (rel !== '..' && !rel.startsWith(`..${sep}`) && !isAbsolute(rel))) {
-    return target
-  }
-  throw new WbError('forbidden', `path is outside the session workspace: "${raw}"`, 403)
+  return resolve(raw)
 }
 
 function messageOf(error: unknown): string {
@@ -297,17 +282,12 @@ async function endpointResolve(ctx: WbContext, payload: unknown): Promise<unknow
   if (!isValidRef(ref)) throw new WbError('bad-request', `invalid relative ref "${ref}"`)
 
   const cwd = sessionCwdOf(ctx, sessionId)
-  // The Markdown file itself must be inside the workspace (canonical base).
-  const base = await resolveWorkspacePath(cwd, rawBase)
+  // The Markdown file may live anywhere on the host (reads are unconfined).
+  const base = resolveReadPath(rawBase)
   const candidates = await resolveCandidates(cwd, base, ref)
 
   for (const candidate of candidates) {
-    let target: string
-    try {
-      target = await resolveWorkspacePath(cwd, candidate)
-    } catch {
-      continue // escapes the workspace → never served; try the next priority
-    }
+    const target = resolve(candidate)
     const info = await stat(target).catch(() => undefined)
     if (info === undefined || !info.isFile()) continue
 

@@ -46,7 +46,7 @@ dsh plugin add github:AKS1st/dock-markdown
 
 All raw HTML produced by `marked` passes through `DOMPurify.sanitize()` (default allowlist) before touching the DOM; `dangerouslySetInnerHTML` is only used on sanitized output. Known trade-off: DOMPurify's defaults allow the `style` attribute, so a malicious Markdown file could in theory use CSS for external tracking — add `FORBID_ATTR: ['style']` if you need stricter sanitization.
 
-Relative assets are resolved only inside the session workspace: any candidate that escapes the workspace (`..`, a symlink pointing out, a git repo root above the workspace, ...) is skipped and never read.
+Relative assets are not confined to the session workspace: a Markdown file can live anywhere on the host (the conversation context may mention files outside it, e.g. `~/.dsh/skills/...`), and its relative images / internal links resolve with the priority Markdown directory → git repository root → session workspace root — any existing candidate file is served.
 
 ## License
 

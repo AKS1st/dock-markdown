@@ -46,7 +46,7 @@ dsh plugin add github:AKS1st/dock-markdown
 
 `marked` 输出的原始 HTML 一律经 `DOMPurify.sanitize()`（默认白名单）消毒后才写入 DOM，`dangerouslySetInnerHTML` 只用于消毒后的结果。已知取舍：DOMPurify 默认允许 `style` 属性，恶意 Markdown 理论上可用 CSS 做外联跟踪——如需更严格可加 `FORBID_ATTR: ['style']`。
 
-相对路径资源只在会话工作区内解析：任何逃逸工作区的候选（`..`、符号链接指向工作区外、git 仓库根位于工作区之上等）一律跳过，不会读取工作区之外的文件。
+相对路径资源不受会话工作区限制：Markdown 文件可能位于主机的任何位置（对话上下文可提及工作区外的文件，如 `~/.dsh/skills/...`），其相对图片 / 内部链接按「Markdown 所在目录 → git 仓库根目录 → 会话工作区根目录」优先级解析，只要候选是存在的文件即可读取。
 
 ## License
 
