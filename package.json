@@ -1,6 +1,6 @@
 {
   "name": "dock-markdown",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Markdown viewer for the dock file explorer: renders .md/.markdown/.mdx files with a one-click switch to the text editor.",
   "type": "module",
   "repository": {
