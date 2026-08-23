@@ -42,6 +42,15 @@ dsh plugin add github:AKS1st/dock-editor
 dsh plugin add github:AKS1st/dock-markdown
 ```
 
+从 npm registry 安装同样支持：
+
+```sh
+dsh plugin add dock-base
+dsh plugin add dock-files
+dsh plugin add dock-editor
+dsh plugin add dock-markdown
+```
+
 ## 安全
 
 `marked` 输出的原始 HTML 一律经 `DOMPurify.sanitize()`（默认白名单）消毒后才写入 DOM，`dangerouslySetInnerHTML` 只用于消毒后的结果。已知取舍：DOMPurify 默认允许 `style` 属性，恶意 Markdown 理论上可用 CSS 做外联跟踪——如需更严格可加 `FORBID_ATTR: ['style']`。
