@@ -35,20 +35,22 @@ dock 系列的 Markdown 查看插件：为 dock-files 文件域注册 `markdown`
 
 需要 `dock`、`dock-files` 与 `dock-editor`（查看器切换依赖其 editor 视图）：
 
-```sh
-dsh plugin add github:AKS1st/dock
-dsh plugin add github:AKS1st/dock-files
-dsh plugin add github:AKS1st/dock-editor
-dsh plugin add github:AKS1st/dock-markdown
-```
-
-从 npm registry 安装同样支持：
+推荐从 npm registry 安装：
 
 ```sh
 dsh plugin add dock-base
 dsh plugin add dock-files
 dsh plugin add dock-editor
 dsh plugin add dock-markdown
+```
+
+或通过 GitHub 安装（备选）：
+
+```sh
+dsh plugin add github:AKS1st/dock
+dsh plugin add github:AKS1st/dock-files
+dsh plugin add github:AKS1st/dock-editor
+dsh plugin add github:AKS1st/dock-markdown
 ```
 
 ## 安全

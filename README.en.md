@@ -35,20 +35,22 @@ Markdown viewer plugin of the dock family: registers the `markdown` file viewer 
 
 Requires `dock`, `dock-files` and `dock-editor` (the view switch opens its editor view):
 
-```sh
-dsh plugin add github:AKS1st/dock
-dsh plugin add github:AKS1st/dock-files
-dsh plugin add github:AKS1st/dock-editor
-dsh plugin add github:AKS1st/dock-markdown
-```
-
-The same plugins are also available from the npm registry:
+Recommended install from the npm registry:
 
 ```sh
 dsh plugin add dock-base
 dsh plugin add dock-files
 dsh plugin add dock-editor
 dsh plugin add dock-markdown
+```
+
+Or install from GitHub (alternative):
+
+```sh
+dsh plugin add github:AKS1st/dock
+dsh plugin add github:AKS1st/dock-files
+dsh plugin add github:AKS1st/dock-editor
+dsh plugin add github:AKS1st/dock-markdown
 ```
 
 ## Security
