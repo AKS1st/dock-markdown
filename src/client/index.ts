@@ -33,6 +33,13 @@ export function apply(ctx: WorkbenchContext): void {
   // anyway so a broken runtime degrades instead of throwing.
   if (workbench === undefined || files === undefined) return
 
+  ctx.effect(() => workbench.registerPlugin({
+    id: 'dock-markdown',
+    title: 'Markdown',
+    description: 'Markdown viewer for the dock file explorer: renders .md/.markdown/.mdx files with a one-click switch to the text editor.',
+    hasEntry: false,
+  }), 'dock-markdown: plugin metadata')
+
   // Register the markdown viewer for .md / .markdown / .mdx files (the
   // catch-all default stays dock-editor's 'editor' viewer), with the
   // explorer icon for those types: a markdown-logo glyph (rounded frame +

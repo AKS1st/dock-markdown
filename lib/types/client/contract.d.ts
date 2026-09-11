@@ -98,6 +98,7 @@ export interface ViewDefinition {
 /** One activity-bar item (the left vertical strip, VSCode style). */
 export interface ActivityBarItemDefinition {
     id: string;
+    pluginId?: string;
     title: string;
     icon: IconRef;
     /** Sort order (ascending); default 100. */
@@ -193,7 +194,16 @@ export interface OpenPathOptions {
  * consuming plugin wraps it in `ctx.effect(...)` so Cordis fiber disposal
  * (HMR / disable) reverts the registration.
  */
+export interface PluginDefinition {
+    id: string;
+    title: string;
+    description?: string;
+    icon?: IconRef;
+    hasEntry: boolean;
+    order?: number;
+}
 export interface WorkbenchService {
+    registerPlugin(def: PluginDefinition): () => void;
     registerActivityBarItem(def: ActivityBarItemDefinition): () => void;
     registerPanel(def: ViewDefinition & {
         region: 'sideBar';
