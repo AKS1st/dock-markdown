@@ -31,6 +31,23 @@ Markdown viewer plugin of the dock family: registers the `markdown` file viewer 
 | `react` ^18.2.0 | peer (optional) | needed for client rendering; without it the viewer UI does not activate |
 | `marked` / `dompurify` | bundled (build-time) | GFM rendering and sanitization; shipped with the plugin, no separate install needed |
 
+## The dock plugin family
+
+dock is a set of composable plugins; this one covers a single capability. Every plugin is optional:
+
+| Plugin | What it does |
+| --- | --- |
+| [dock-base](https://github.com/AKS1st/dock) | workbench shell: activity bar, side bar, editor area, status bar and the `ctx.workbench` registry |
+| [dock-files](https://github.com/AKS1st/dock-files) | file explorer: workspace tree, new/rename/delete, drag-and-drop and clipboard import |
+| [dock-editor](https://github.com/AKS1st/dock-editor) | text viewer/editor: undo/redo, Ctrl+S save, binary detection |
+| [dock-images](https://github.com/AKS1st/dock-images) | image viewer: PNG/JPEG/GIF/WebP/BMP/SVG/ICO/AVIF |
+| [dock-markdown](https://github.com/AKS1st/dock-markdown) | Markdown viewer: GFM rendering, outline, relative-asset resolution |
+| [dock-media](https://github.com/AKS1st/dock-media) | audio/video player: HTTP Range streaming, music player and fullscreen video |
+| [dock-git](https://github.com/AKS1st/dock-git) | Git history: swimlane graph, branches/tags, stage and commit |
+| [dock-spreadsheet](https://github.com/AKS1st/dock-spreadsheet) | read-only spreadsheets: XLSX/XLS/ODS/CSV/TSV |
+
+This plugin is **dock-markdown**; see the "Recommended companion plugins" section of dock-base for full combinations.
+
 ## Install
 
 Requires `dock`, `dock-files` and `dock-editor` (the view switch opens its editor view):
